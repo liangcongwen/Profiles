@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:" />
+  <title>桌面签</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div id="app" class="app">
+    <header class="titlebar">
+      <div class="brand">桌面签</div>
+      <div class="title-actions">
+        <button id="btnSearch" class="icon-btn" title="搜索 (Ctrl+F)">🔍</button>
+        <button id="btnPin" class="icon-btn" title="窗口置顶">📌</button>
+        <button id="btnSettings" class="icon-btn" title="设置">⚙</button>
+        <button id="btnHide" class="icon-btn" title="隐藏到托盘">—</button>
+      </div>
+    </header>
+
+    <nav id="tabs" class="tabs"></nav>
+
+    <div id="searchBar" class="search-bar hidden">
+      <input id="searchInput" type="text" placeholder="搜索待办内容…" />
+    </div>
+
+    <div class="composer">
+      <input id="newInput" type="text" maxlength="500" placeholder="添加待办，如：明天3点开会" title="回车保存；可直接写时间，如“10分钟后”“周五 9:30”“下周一上午十点”" />
+      <button id="btnNewTime" class="icon-btn" title="设置提醒时间">⏰</button>
+    </div>
+    <div id="hint" class="hint hidden"></div>
+
+    <main id="list" class="list"></main>
+
+    <footer class="statusbar">
+      <span id="stat"></span>
+      <button id="btnClearDone" class="link-btn hidden">清空已完成</button>
+    </footer>
+  </div>
+
+  <!-- 编辑面板 -->
+  <div id="editor" class="sheet hidden">
+    <div class="sheet-card">
+      <h3>编辑待办</h3>
+      <label>内容<textarea id="edText" rows="3" maxlength="500"></textarea></label>
+      <label>备注<textarea id="edNote" rows="2" maxlength="2000" placeholder="可选"></textarea></label>
+      <div class="row">
+        <label class="grow">分类<select id="edCat"></select></label>
+        <label class="grow">标记颜色<select id="edColor">
+          <option value="">无</option>
+          <option value="#e74c3c">红</option>
+          <option value="#f39c12">橙</option>
+          <option value="#27ae60">绿</option>
+          <option value="#2980b9">蓝</option>
+          <option value="#8e44ad">紫</option>
+        </select></label>
+      </div>
+      <label>提醒时间
+        <div class="row">
+          <input id="edTime" type="datetime-local" class="grow" />
+          <button id="edClearTime" class="btn small" type="button">清除</button>
+        </div>
+      </label>
+      <div class="quick-times" id="quickTimes">
+        <button type="button" data-q="30m">30分钟后</button>
+        <button type="button" data-q="1h">1小时后</button>
+        <button type="button" data-q="tonight">今晚8点</button>
+        <button type="button" data-q="tomorrow">明早9点</button>
+      </div>
+      <div class="row">
+        <label class="grow">重复<select id="edRepeat">
+          <option value="none">不重复</option>
+          <option value="daily">每天</option>
+          <option value="weekdays">工作日</option>
+          <option value="weekly">每周</option>
+          <option value="monthly">每月</option>
+          <option value="yearly">每年</option>
+        </select></label>
+        <label class="check"><input id="edImportant" type="checkbox" /> 重要 ★</label>
+      </div>
+      <div class="sheet-actions">
+        <button id="edDelete" class="btn danger" type="button">删除</button>
+        <span class="grow"></span>
+        <button id="edCancel" class="btn" type="button">取消</button>
+        <button id="edSave" class="btn primary" type="button">保存</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 设置面板 -->
+  <div id="settings" class="sheet hidden">
+    <div class="sheet-card">
+      <h3>设置</h3>
+      <label>主题
+        <div id="themes" class="themes"></div>
+      </label>
+      <label><span>不透明度 <span id="opacityVal"></span></span>
+        <input id="setOpacity" type="range" min="30" max="100" step="1" />
+      </label>
+      <label><span>字体大小 <span id="fontVal"></span></span>
+        <input id="setFont" type="range" min="12" max="20" step="1" />
+      </label>
+      <label class="check"><input id="setTop" type="checkbox" /> 窗口置顶</label>
+      <label class="check"><input id="setEdge" type="checkbox" /> 贴边自动隐藏（拖到屏幕上/左/右边缘）</label>
+      <label class="check"><input id="setLock" type="checkbox" /> 锁定窗口位置和大小</label>
+      <label class="check"><input id="setAuto" type="checkbox" /> 开机自启动</label>
+      <label class="check"><input id="setSound" type="checkbox" /> 提醒时播放提示音</label>
+      <label>显示/隐藏快捷键
+        <input id="setHotkey" type="text" placeholder="点击后按下组合键" readonly />
+      </label>
+      <label>分类管理</label>
+      <div id="catList" class="cat-list"></div>
+      <div class="row">
+        <input id="newCat" type="text" class="grow" maxlength="12" placeholder="新分类名称" />
+        <button id="btnAddCat" class="btn small" type="button">添加</button>
+      </div>
+      <div class="row">
+        <button id="btnExport" class="btn" type="button">导出备份</button>
+        <button id="btnImport" class="btn" type="button">导入备份</button>
+      </div>
+      <div class="sheet-actions">
+        <span class="grow muted">数据保存在本机，退出不会丢失</span>
+        <button id="setClose" class="btn primary" type="button">完成</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast" class="toast hidden"></div>
+
+  <script src="parse-time.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

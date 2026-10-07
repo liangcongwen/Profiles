@@ -1,0 +1,60 @@
+{
+  "name": "desk-todo",
+  "productName": "桌面签",
+  "version": "1.0.0",
+  "description": "类似“敬业签”的 Windows 桌面便签式待办软件：置顶、贴边隐藏、定时提醒、重复提醒、分类、托盘常驻。",
+  "main": "src/main.js",
+  "author": "liangcongwen",
+  "license": "MIT",
+  "scripts": {
+    "start": "electron .",
+    "test": "node --test test/*.test.js",
+    "icon": "node scripts/gen-icon.js",
+    "dist": "electron-builder --win",
+    "dist:dir": "electron-builder --win --dir"
+  },
+  "devDependencies": {
+    "electron": "^33.2.0",
+    "electron-builder": "^25.1.8"
+  },
+  "build": {
+    "appId": "com.liangcongwen.desktodo",
+    "productName": "桌面签",
+    "directories": {
+      "output": "dist",
+      "buildResources": "build"
+    },
+    "files": [
+      "src/**/*",
+      "build/icon.png",
+      "package.json"
+    ],
+    "win": {
+      "icon": "build/icon.png",
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        },
+        {
+          "target": "portable",
+          "arch": [
+            "x64"
+          ]
+        }
+      ]
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "shortcutName": "桌面签",
+      "artifactName": "DeskTodo-Setup-${version}.${ext}"
+    },
+    "portable": {
+      "artifactName": "DeskTodo-Portable-${version}.${ext}"
+    }
+  }
+}
